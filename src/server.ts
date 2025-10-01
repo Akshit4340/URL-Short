@@ -3,13 +3,18 @@ import express from 'express';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
+import cors from 'cors';
 
 // custom modules
 import config from '@/config';
 import router from '@/routes';
+import corsOptions from '@/lib/cors';
 
 // app initialization
 const app = express();
+
+// use cors
+app.use(cors(corsOptions));
 
 // secure headers
 app.use(helmet());
