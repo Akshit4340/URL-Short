@@ -9,6 +9,7 @@ import cors from 'cors';
 import config from '@/config';
 import router from '@/routes';
 import corsOptions from '@/lib/cors';
+import { logger, logtail } from '@/lib/winston';
 
 // app initialization
 const app = express();
@@ -42,11 +43,11 @@ app.use(compression());
 
     // start of the server and listening to the port
     app.listen(config.PORT, () => {
-      console.log(`Server is running at http://localhost:${config.PORT}`);
+      logger.info(`Server is running at http://localhost:${config.PORT}`);
     });
   } catch (error) {
     // log the error if the server fails to start
-    console.error('failed to start the server', error);
+    logger.error('failed to start the server', error);
 
     // in production environment exit the process with failure
     if (config.NODE_ENV === 'production') {
@@ -59,12 +60,15 @@ app.use(compression());
 
 const serverTermination = async (signal: NodeJS.Signals): Promise<void> => {
   try {
-    console.log(`Received ${signal}. Closing server...`);
+    logger.info(`Received ${signal}. Closing server...`);
     // perform any cleanup or shutdown tasks here
-    console.log('Server closed gracefully');
+    logger.info('Server closed gracefully');
+    //flush any logs remaining in logtail before exiting
+    logtail.flush();
+    // exit the process
     process.exit(0);
   } catch (error) {
-    console.error('Error during server shutdown', error);
+    logger.error('Error during server shutdown', error);
   }
 };
 

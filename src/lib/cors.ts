@@ -9,15 +9,13 @@ import type { CorsOptions } from 'cors';
 const corsOptions: CorsOptions = {
   // custom configuration
   origin: (origin, callback) => {
-    if (origin && config.CORS_WHITELIST.includes(origin)) {
+    if (!origin || config.CORS_WHITELIST.includes(origin)) {
+      callback(null, true);
+    } else if (config.NODE_ENV === 'development') {
+      // In development, allow all origins
       callback(null, true);
     } else {
-      // in development allow all requests
-      callback(
-        config.NODE_ENV === 'development'
-          ? null
-          : new Error('Not allowed by CORS'),
-      );
+      callback(new Error('Not allowed by CORS'), false);
     }
   },
 };
