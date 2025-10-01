@@ -10,13 +10,13 @@ import config from '@/config';
 const transportation: transport[] = [];
 
 // throws error when source token or ingesting host is not provided
-if (!config.LOGTAILL_SOURCE_TOKEN || !config.LOGTAIL_INGESTING_HOST) {
+if (!config.LOGTAIL_SOURCE_TOKEN || !config.LOGTAIL_INGESTING_HOST) {
   throw new Error('Logtail source token or ingesting host is not provided');
 }
 
 // create a logtail instance for sending structured logs to logtail
 
-const logtail = new Logtail(config.LOGTAILL_SOURCE_TOKEN, {
+const logtail = new Logtail(config.LOGTAIL_SOURCE_TOKEN, {
   endpoint: config.LOGTAIL_INGESTING_HOST,
 });
 
